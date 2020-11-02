@@ -331,7 +331,9 @@ void editModeSnapView(long addressHex){
 
     tape = readHex(&file, start, ends);
     if(ERROR_CODE_RAISED == ERROR_MEMORY_UNALLOCATED){
-      system("pause");
+      #ifdef _WIN32
+        system("pause");
+      #endif // _WIN32
       exit(0);
     }
 
@@ -393,8 +395,10 @@ void editModeView(){
     tape = readHex(&file, start, ends);
     if(ERROR_CODE_RAISED == ERROR_MEMORY_UNALLOCATED)
     {
+      #ifdef _WIN32
         system("pause");
-        exit(0);
+      #endif // _WIN32
+      exit(0);
     }
     length = GLOBAL_HEX_LENGTH;
 
@@ -475,7 +479,9 @@ void editModeCharView(){
     cin.ignore();
     tape = readHex(&file, start, ends);
     if(ERROR_CODE_RAISED == ERROR_MEMORY_UNALLOCATED){
-      system("pause");
+      #ifdef _WIN32
+        system("pause");
+      #endif // _WIN32
       exit(0);
     }
     length = GLOBAL_HEX_LENGTH;
@@ -577,9 +583,7 @@ void editModeReplace(){
       cout << "EOF>" << endl;
       colorize(BRIGHT_WHITE);
     }
-
     fileStream.close();
-
   }else{
     colorize(RED);
     cout << "File Error>" << endl;
@@ -643,6 +647,9 @@ void editMode(){
     }else if(IsHex(cmd)){
       editModeSnapView(hexToDec(cmd));
     }else if(cmd == "CLS" || cmd == "cls"){
+      #ifdef _WIN32
+        system("cls");
+      #endif // _WIN32
       system("cls");
     }else if(cmd == "HELP" || cmd == "help"){
       cout << "Version: 1.4b1\nAuthor: Miles MJ Jamon\nIcon made by iconixar from www.flaticon.com\nAvailable commands: exit, end, file, view, replace, repl, char, cls, sha256" << endl;
