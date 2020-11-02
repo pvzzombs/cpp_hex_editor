@@ -1,0 +1,39 @@
+#include <windows.h>
+MAINICON ICON "icon.ico"
+
+//VS_VERSION_INFO VERSIONINFO
+//FILEVERSION     1,4,1,0
+//PRODUCTVERSION  1,4,1,0
+  /*FILEFLAGSMASK 0x3fL
+  #ifdef _DEBUG
+  FILEFLAGS 0x1L
+  #else
+  FILEFLAGS 0x0L
+  #endif
+  FILEOS 0x4L
+  FILETYPE 0x1L
+  FILESUBTYPE 0x0L*/
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION     1,4,1,0
+PRODUCTVERSION  1,4,1,0
+BEGIN
+  BLOCK "StringFileInfo"
+  BEGIN
+    BLOCK "040904E4" //US - English (MultiLingual)
+    BEGIN
+      VALUE "Comments", "A c++ hex editor made in code:blocks \0"
+      VALUE "CompanyName", "theGoodProgrammer\0"
+      VALUE "FileDescription", "A c++ hex editor made in code:blocks\0"
+      VALUE "FileVersion", "1.4.1.0\0"
+      VALUE "InternalName", "cpp_hex_editor\0"
+      VALUE "LegalCopyright", "pvzzombs (c) 2020\0"
+      VALUE "OriginalFilename", "cpp_hex_editor.exe\0"
+      VALUE "ProductName", "C++ Hex Editor\0"
+      VALUE "ProductVersion", "1.4.1.0\0"
+    END
+  END
+  BLOCK "VarFileInfo"
+  BEGIN
+    VALUE "Translation", 0x0, 1252 //Language - Neutral (MultiLingual)
+  END
+END
