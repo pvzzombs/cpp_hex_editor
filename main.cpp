@@ -650,7 +650,6 @@ void editMode(){
       #ifdef _WIN32
         system("cls");
       #endif // _WIN32
-      system("cls");
     }else if(cmd == "HELP" || cmd == "help"){
       cout << "Version: 1.4b1\nAuthor: Miles MJ Jamon\nIcon made by iconixar from www.flaticon.com\nAvailable commands: exit, end, file, view, replace, repl, char, cls, sha256" << endl;
     }
