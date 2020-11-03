@@ -3,12 +3,15 @@
 #include <fstream>
 #include <sstream>
 #include <cstdlib>
-#include <conio.h>
-//#include <windows.h>
+
 #include "sha256.hpp"
 
 #ifdef _WIN32
+  #include <conio.h>
   #include <windows.h>
+#else
+  #include <termios.h>
+  #include <stdio.h>
 #endif // _WIN32
 
 #define GREEN 0
@@ -33,63 +36,105 @@ using namespace std;
 */
 void colorize(long color_coding){
   #ifdef _WIN32
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-  #else
-
-  #endif // _WIN32
-
+  HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
   switch(color_coding){
     case GREEN:
-      #ifdef _WIN32
-        SetConsoleTextAttribute(hConsole, 10);
-      #else
-        std::cout << "\033[1;92m";
-      #endif // _WIN32
+      SetConsoleTextAttribute(hConsole, 10);
     break;
     case RED:
-      #ifdef _WIN32
-        SetConsoleTextAttribute(hConsole, 12);
-      #else
-        std::cout << "\033[1;91m";
-      #endif // _WIN32
+      SetConsoleTextAttribute(hConsole, 12);
     break;
     case ORANGE:
-      #ifdef _WIN32
-        SetConsoleTextAttribute(hConsole, 12);
-      #else
-        std::cout << "\033[1;91m";
-      #endif // _WIN32
+      SetConsoleTextAttribute(hConsole, 12);
     break;
     case YELLOW:
-      #ifdef _WIN32
-        SetConsoleTextAttribute(hConsole, 14);
-      #else
-        std::cout << "\033[1;93m";
-      #endif // _WIN32
+      SetConsoleTextAttribute(hConsole, 14);
     break;
     case CYAN_BLUE:
-      #ifdef _WIN32
-        SetConsoleTextAttribute(hConsole, 11);
-      #else
-        std::cout << "\033[1;96m";
-      #endif // _WIN32
+      SetConsoleTextAttribute(hConsole, 11);
     break;
     case BRIGHT_WHITE:
-      #ifdef _WIN32
-        SetConsoleTextAttribute(hConsole, 15);
-      #else
-        std::cout << "\033[1;97m";
-      #endif // _WIN32
+      SetConsoleTextAttribute(hConsole, 15);
     break;
     case NORMALIZE:
-      #ifdef _WIN32
-        SetConsoleTextAttribute(hConsole, 7);
-      #else
-        std::cout << "\033[0m";
-      #endif // _WIN32
+      SetConsoleTextAttribute(hConsole, 7);
     break;
   }
+  #else
+  switch(color_coding){
+    case GREEN:
+      std::cout << "\033[1;92m";
+    break;
+    case RED:
+      std::cout << "\033[1;91m";
+    break;
+    case ORANGE:
+      std::cout << "\033[1;91m";
+    break;
+    case YELLOW:
+      std::cout << "\033[1;93m";
+    break;
+    case CYAN_BLUE:
+      std::cout << "\033[1;96m";
+    break;
+    case BRIGHT_WHITE:
+      std::cout << "\033[1;97m";
+    break;
+    case NORMALIZE:
+      std::cout << "\033[0m";
+    break;
+  }
+  #endif // _WIN32
 }
+
+void clearConsole(){
+  long i;
+  for(i=0; i<10; i++){
+    cout << "\n\n\n\n\n\n\n\n\n\n";
+  }
+}
+
+#ifndef _WIN32
+//from https://stackoverflow.com/questions/7469139/what-is-the-equivalent-to-getch-getche-in-linux
+static struct termios old, current;
+
+/* Initialize new terminal i/o settings */
+void initTermios(int echo) {
+  tcgetattr(0, &old); /* grab old terminal i/o settings */
+  current = old; /* make new settings same as old settings */
+  current.c_lflag &= ~ICANON; /* disable buffered i/o */
+  if (echo) {
+      current.c_lflag |= ECHO; /* set echo mode */
+  } else {
+      current.c_lflag &= ~ECHO; /* set no echo mode */
+  }
+  tcsetattr(0, TCSANOW, &current); /* use these new terminal i/o settings now */
+}
+
+/* Restore old terminal i/o settings */
+void resetTermios(void) {
+  tcsetattr(0, TCSANOW, &old);
+}
+
+/* Read 1 character - echo defines echo mode */
+char getch_(int echo) {
+  char ch;
+  initTermios(echo);
+  ch = getchar();
+  resetTermios();
+  return ch;
+}
+
+/* Read 1 character without echo */
+char getch(void) {
+  return getch_(0);
+}
+
+/* Read 1 character with echo */
+char getche(void) {
+  return getch_(1);
+}
+#endif // _WIN32
 
 const char * mapping = "0123456789abcdefghijklmnopqrstuvwxyz";
 
@@ -331,9 +376,6 @@ void editModeSnapView(long addressHex){
 
     tape = readHex(&file, start, ends);
     if(ERROR_CODE_RAISED == ERROR_MEMORY_UNALLOCATED){
-      #ifdef _WIN32
-        system("pause");
-      #endif // _WIN32
       exit(0);
     }
 
@@ -393,11 +435,7 @@ void editModeView(){
 
     cin.ignore();
     tape = readHex(&file, start, ends);
-    if(ERROR_CODE_RAISED == ERROR_MEMORY_UNALLOCATED)
-    {
-      #ifdef _WIN32
-        system("pause");
-      #endif // _WIN32
+    if(ERROR_CODE_RAISED == ERROR_MEMORY_UNALLOCATED){
       exit(0);
     }
     length = GLOBAL_HEX_LENGTH;
@@ -479,9 +517,6 @@ void editModeCharView(){
     cin.ignore();
     tape = readHex(&file, start, ends);
     if(ERROR_CODE_RAISED == ERROR_MEMORY_UNALLOCATED){
-      #ifdef _WIN32
-        system("pause");
-      #endif // _WIN32
       exit(0);
     }
     length = GLOBAL_HEX_LENGTH;
@@ -647,11 +682,9 @@ void editMode(){
     }else if(IsHex(cmd)){
       editModeSnapView(hexToDec(cmd));
     }else if(cmd == "CLS" || cmd == "cls"){
-      #ifdef _WIN32
-        system("cls");
-      #endif // _WIN32
+      clearConsole();
     }else if(cmd == "HELP" || cmd == "help"){
-      cout << "Version: 1.4b1\nAuthor: Miles MJ Jamon\nIcon made by iconixar from www.flaticon.com\nAvailable commands: exit, end, file, view, replace, repl, char, cls, sha256" << endl;
+      cout << "Version: 1.4.2.0\nAuthor: Miles MJ Jamon\nIcon made by iconixar from www.flaticon.com\nAvailable commands: exit, end, file, view, replace, repl, char, cls, sha256" << endl;
     }
     colorize(BRIGHT_WHITE);
   }
@@ -667,7 +700,7 @@ int main(){
   #endif // _WIN32
 
   colorize(CYAN_BLUE);
-  cout << "CPP Hex Editor v1.4b1" << endl;
+  cout << "CPP Hex Editor v1.4.2.0" << endl;
   colorize(BRIGHT_WHITE);
 
   while(true){
