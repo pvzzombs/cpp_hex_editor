@@ -167,32 +167,30 @@ long POWER(long a, long b){
   return result;
 }
 
+int switchHexDigit(int result){
+  switch (result){
+  case 49: case 17:
+    return 10;
+  case 50: case 18:
+    return 11;
+  case 51: case 19:
+    return 12;
+  case 52: case 20:
+    return 13;
+  case 53: case 21:
+    return 14;
+  case 54: case 22:
+    return 15;
+  }
+  return 0;
+}
+
 int hexDigitToDecDigit(char digit){
   int result = digit - '0';
   if(result > -1 && result < 10){
     return result;
   }else{
-    switch (result)
-    {
-    case 49:
-    case 17:
-      return 10;
-    case 50:
-    case 18:
-      return 11;
-    case 51:
-    case 19:
-      return 12;
-    case 52:
-    case 20:
-      return 13;
-    case 53:
-    case 21:
-      return 14;
-    case 54:
-    case 22:
-      return 15;
-    }
+    return switchHexDigit(result);
   }
   return 0;
 }
@@ -659,6 +657,40 @@ void editModeSha256(){
   }
 }
 
+/// EDIT  MODE ///
+
+bool isExit(string & cmd){
+  return (cmd == "EXIT" || cmd == "exit" || cmd == "END" || cmd == "end");
+}
+
+bool isFile(string & cmd){
+  return (cmd == "FILE" || cmd == "file");
+}
+
+bool isView(string & cmd){
+  return (cmd == "VIEW" || cmd == "view");
+}
+
+bool isReplace(string & cmd){
+  return (cmd == "REPLACE" || cmd == "replace" || cmd == "REPL" || cmd == "repl");
+}
+
+bool isChar(string & cmd){
+  return (cmd == "CHAR" || cmd == "char");
+}
+
+bool isSHA256(string & cmd){
+  return (cmd == "sha256" || cmd == "SHA256");
+}
+
+bool isCls(string & cmd){
+  return (cmd == "CLS" || cmd == "cls");
+}
+
+bool isHelp(string & cmd){
+  return (cmd == "HELP" || cmd == "help");
+}
+
 void editMode(){
   string cmd = "";
   EDIT_MODE = 1;
@@ -667,24 +699,24 @@ void editMode(){
     clearErrors();
     cout << "> ";
     getline(cin, cmd);
-    if(cmd == "EXIT" || cmd == "exit" || cmd == "END" || cmd == "end"){
+    if(isExit(cmd)){
       EDIT_MODE = 0;
-    }else if(cmd == "FILE" || cmd == "file"){
+    }else if(isFile(cmd)){
       editModeFile();
-    }else if(cmd == "VIEW" || cmd == "view"){
+    }else if(isView(cmd)){
       editModeView();
-    }else if(cmd == "REPLACE" || cmd == "replace" || cmd == "REPL" || cmd == "repl"){
+    }else if(isReplace(cmd)){
       editModeReplace();
-    }else if(cmd == "CHAR" || cmd == "char"){
+    }else if(isChar(cmd)){
       editModeCharView();
-    }else if(cmd == "sha256" || cmd == "SHA256"){
+    }else if(isSHA256(cmd)){
       editModeSha256();
     }else if(IsHex(cmd)){
       editModeSnapView(hexToDec(cmd));
-    }else if(cmd == "CLS" || cmd == "cls"){
+    }else if(isCls(cmd)){
       clearConsole();
-    }else if(cmd == "HELP" || cmd == "help"){
-      cout << "Version: 1.4.2.0\nAuthor: Miles MJ Jamon\nIcon made by iconixar from www.flaticon.com\nAvailable commands: exit, end, file, view, replace, repl, char, cls, sha256" << endl;
+    }else if(isHelp(cmd)){
+      cout << "Version: 1.4.2.1\nAuthor: Miles MJ Jamon\nIcon made by iconixar from www.flaticon.com\nAvailable commands: exit, end, file, view, replace, repl, char, cls, sha256" << endl;
     }
     colorize(BRIGHT_WHITE);
   }
@@ -700,7 +732,7 @@ int main(){
   #endif // _WIN32
 
   colorize(CYAN_BLUE);
-  cout << "CPP Hex Editor v1.4.2.0" << endl;
+  cout << "CPP Hex Editor v1.4.2.1" << endl;
   colorize(BRIGHT_WHITE);
 
   while(true){
