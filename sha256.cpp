@@ -7,11 +7,10 @@
 #include <vector>
 #include <cstring>
 
-using namespace std;
 //// let's define some things
 //// to make it easy to use
 
-string sha256::padStringZeroes(string Num, u32 padlength){
+std::string sha256::padStringZeroes(std::string Num, u32 padlength){
   u32 length = u32(Num.length());
   while(length < padlength){
     Num = "0" + Num;
@@ -20,11 +19,11 @@ string sha256::padStringZeroes(string Num, u32 padlength){
   return Num;
 }
 
-string sha256::decToRadix(u32 num, u32 radix){
-  string rem;
+std::string sha256::decToRadix(u32 num, u32 radix){
+  std::string rem;
   u32 temp = 0;
-  stringstream ss;
-  string result = "";
+  std::stringstream ss;
+  std::string result = "";
   while(num > 0){
     temp = num % radix;
     result = mapping[temp] + result;
@@ -129,11 +128,11 @@ sha256::sha256(){
 ///                            SHA-256 IMPLEMENTATION                              ///
 ///================================================================================///
 
-string sha256::hash(string input){
+std::string sha256::hash(std::string input){
 	////resetH
   resetH();
   ////the actual message
-  vector<u8> message_blocks;
+  std::vector<u8> message_blocks;
   ////storage of length of message
   u64 a_length = input.length();
   u64 m_length = a_length * 8;
@@ -141,7 +140,7 @@ string sha256::hash(string input){
 
   ////convert characters into group
   ////of bytes
-  vector<u8> blockOfBytes;
+  std::vector<u8> blockOfBytes;
   for(u64 ia=0; ia<a_length; ia++){
     blockOfBytes.push_back(input[ia]);
   }
@@ -157,7 +156,7 @@ string sha256::hash(string input){
 
   ////the number of zeroes between the message
   ////and the length in bytes
-  vector<u8> blockOfZeroes;
+  std::vector<u8> blockOfZeroes;
   u64 numberOfBlockOfZeroes = (mod((448-(m_length+1)), 512) + 1) / 8;
 
   ////store the zeroes in bytes
@@ -193,9 +192,9 @@ string sha256::hash(string input){
   ////note that this a 2d array,
   ////where each item in M[] will contain
   ////x16 32bits which is the padded message
-  vector<vector<u32>> M;
+  std::vector<std::vector<u32>> M;
   ////this will be always 16 in .size()
-  vector<u32> tempa;
+  std::vector<u32> tempa;
   u32 message_blocks_length = message_blocks.size() * 8;
   u32 lastIndex = 0;
 
@@ -224,7 +223,7 @@ string sha256::hash(string input){
     ////the 2d array being stored while
     ////extending it's content to 64,
     ////that means, W[] total size is 64
-    vector<u32> W;
+    std::vector<u32> W;
     u32 temp = 0;
 
     ////the working schedule loop
@@ -276,9 +275,9 @@ string sha256::hash(string input){
 
   ////after  the main loop, output
   ////the contents of the H[] table
-  string output = "";
+  std::string output = "";
   for(u32 ic=0; ic<8; ic++){
-    string tempb = decToRadix(H[ic], 16);
+    std::string tempb = decToRadix(H[ic], 16);
     output += padStringZeroes(tempb, 8);
   }
 
@@ -348,7 +347,7 @@ void sha256::process_block(){
   H_up[7] += h;
 }
 
-void sha256::hash_update(string input){
+void sha256::hash_update(std::string input){
   ////get the input
   u64 lx = input.length();
   for(u32 jx=0; jx<lx; jx++){
@@ -382,7 +381,7 @@ void sha256::hash_update_array(char input[], u32 input_length){
     }
 
     m_length_up = m_length_up + (input_length * 8);
-  }catch(exception& e){
+  }catch(std::exception& e){
     ////cerr << "An error occured while updating. Error type: " << e.what() << endl;
     hashResult_up = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
     hash_error = true;
@@ -405,7 +404,7 @@ void sha256::hash_update(char * input, u64 input_length){
     }
 
     m_length_up = m_length_up + (input_length * 8);
-  }catch(exception& e){
+  }catch(std::exception& e){
     ////cerr << "An error occured while updating. Error type: " << e.what() << endl;
     hashResult_up = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
     hash_error = true;
@@ -436,7 +435,7 @@ void sha256::hash_update(char * input, u64 input_length, void (*func)(u32 percen
     }
 
     m_length_up = m_length_up + (input_length * 8);
-  }catch(exception& e){
+  }catch(std::exception& e){
     ////cerr << "An error occured while updating. Error type: " << e.what() << endl;
     hashResult_up = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
     hash_error = true;
@@ -494,7 +493,7 @@ void sha256::hash_finalize(){
 
 
   ////cout << "DEBUG - COLLECTING HASH STARTED" << endl;
-  string tempb;
+  std::string tempb;
   hashResult_up = "";
 
   tempb = decToRadix(H_up[0], 16);
@@ -538,7 +537,7 @@ void sha256::hash_finalize(){
   m_length_up = 0;
 }
 
-string sha256::hash_result(){
+std::string sha256::hash_result(){
   return hashResult_up;
 }
 

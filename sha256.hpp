@@ -11,7 +11,6 @@
 #include <crtdbg.h>
 #endif //MEMLEAK
 
-using namespace std;
 //// let's define some things
 //// to make it easy to use
 
@@ -36,11 +35,11 @@ class sha256{
 	u8 blockOfBytes_up[64];
 	u32 blockOfBytes_count;
 	//vector<u8> blockOfBytes_up;
-	string hashResult_up;
+	std::string hashResult_up;
 
 	void resetH();
-	string padStringZeroes(string Num, u32 padlength);
-	string decToRadix(u32 num, u32 radix);
+	std::string padStringZeroes(std::string Num, u32 padlength);
+	std::string decToRadix(u32 num, u32 radix);
 
 	u64 mod(i64 a, i64 b);
 
@@ -72,14 +71,14 @@ public:
 	  \param input The input to be hashed.
 	  \return sha256 hash
 	*/
-	string hash(string input);
+	std::string hash(std::string input);
 
 	/**
 	  \brief Updates the message block. Note that this is part
 	         of sha256 update and finalize function.
     \param input The string that will be added to the message block.
 	*/
-	void hash_update(string input);
+	void hash_update(std::string input);
 
 	/**
 	  \brief Updates the message block. Note that this is part
@@ -127,7 +126,7 @@ public:
 	  \brief After finalizing the hash, get the result as a string
 	  \return sha256 hash
 	*/
-	string hash_result();
+	std::string hash_result();
 };
 
 
